@@ -7,6 +7,7 @@ import {
   POPULAR_CITIES,
 } from './services/prayerTimes';
 import { soundService } from './services/soundService';
+import { getCurrentGPSPosition } from './services/locationService';
 import PrayerDashboard from './components/PrayerDashboard';
 import QiblaCompass from './components/QiblaCompass';
 import QiblaMap from './components/QiblaMap';
@@ -105,71 +106,25 @@ export default function App() {
     localStorage.setItem(STORAGE_KEY_COORDS, JSON.stringify(newCoords));
   };
 
-  // Reverse geocode lat/lng to get friendly city name
-  const fetchCityName = async (lat: number, lng: number): Promise<{ city: string; country: string }> => {
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 4000);
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10`,
-        { signal: controller.signal }
-      );
-      clearTimeout(timeout);
-      if (res.ok) {
-        const data = await res.json();
-        const address = data.address || {};
-        const city =
-          address.city ||
-          address.town ||
-          address.municipality ||
-          address.county ||
-          address.state ||
-          'Current Location';
-        const country = address.country || '';
-        return { city, country };
-      }
-    } catch {
-      // ignore network errors
-    }
-    return { city: `${lat.toFixed(2)}°, ${lng.toFixed(2)}°`, country: '' };
-  };
-
-  // GPS Geolocation Handler
-  const handleGetGPSLocation = useCallback(() => {
-    if (!('geolocation' in navigator)) {
-      alert('Geolocation is not supported by your browser.');
-      return;
-    }
-
+  // GPS Geolocation Handler (Cross-platform Web + Android Capacitor)
+  const handleGetGPSLocation = useCallback(async () => {
     setIsLoadingGPS(true);
-
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-        const geoInfo = await fetchCityName(lat, lng);
-
-        const newCoords: Coordinates = {
-          latitude: lat,
-          longitude: lng,
-          city: geoInfo.city,
-          country: geoInfo.country,
-          timezone: -new Date().getTimezoneOffset() / 60,
-        };
-
-        handleSelectCoords(newCoords);
-        setIsLoadingGPS(false);
-      },
-      (err) => {
-        console.warn('Geolocation error or permission denied:', err);
-        setIsLoadingGPS(false);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 60000,
-      }
-    );
+    try {
+      const loc = await getCurrentGPSPosition();
+      handleSelectCoords({
+        latitude: loc.latitude,
+        longitude: loc.longitude,
+        city: loc.city,
+        country: loc.country,
+        timezone: loc.timezone,
+      });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Unable to retrieve GPS location.';
+      console.warn('GPS location retrieval error:', msg);
+      alert(`${msg}\nPlease ensure GPS and location permissions are enabled for this app, or pick a city from the list.`);
+    } finally {
+      setIsLoadingGPS(false);
+    }
   }, []);
 
   // Try GPS automatically on first mount if no saved coords exist

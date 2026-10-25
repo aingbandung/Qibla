@@ -57,8 +57,17 @@ jobs:
             echo "Adding Android native platform..."
             npx cap add android
           fi
-          echo "Syncing web assets into native Android project..."
+          echo "Syncing web assets and plugins into native Android project..."
           npx cap sync android
+
+          # Inject GPS and Notification permissions into AndroidManifest.xml
+          MANIFEST="android/app/src/main/AndroidManifest.xml"
+          if [ -f "$MANIFEST" ]; then
+            if ! grep -q "ACCESS_FINE_LOCATION" "$MANIFEST"; then
+              echo "Injecting Location and Notification permissions into $MANIFEST..."
+              sed -i '/<manifest/a \    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-feature android:name="android.hardware.location.gps" android:required="false" />\n    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />' "$MANIFEST"
+            fi
+          fi
 
       - name: Ensure gradlew is executable
         run: |

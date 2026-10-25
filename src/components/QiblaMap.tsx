@@ -79,26 +79,33 @@ export default function QiblaMap({ userCoords, isDarkMode, onRefreshLocation }: 
 
     mapInstanceRef.current = map;
 
-    // Base Tile layers
-    const standardLayer = L.tileLayer(
-      'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-      {
-        maxZoom: 19,
-        subdomains: 'abcd',
-      }
-    );
+    // Base Tile layers (100% Free, Zero API Keys required)
+    // Primary: Standard OpenStreetMap
+    const osmLayer = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors',
+    });
 
+    // Secondary: OpenStreetMap Humanitarian / Crisp Detailed Layer
+    const osmHotLayer = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      subdomains: ['a', 'b', 'c'],
+      attribution: '&copy; OpenStreetMap contributors, Humanitarian style',
+    });
+
+    // Satellite Imagery: Free Public GIS Tile Service
     const satelliteLayer = L.tileLayer(
       'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       {
         maxZoom: 18,
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
       }
     );
 
     if (mapType === 'satellite') {
       satelliteLayer.addTo(map);
     } else {
-      standardLayer.addTo(map);
+      osmLayer.addTo(map);
     }
 
     // Great circle line points
@@ -291,6 +298,8 @@ export default function QiblaMap({ userCoords, isDarkMode, onRefreshLocation }: 
           <span>🕋</span>
           <span>Kaaba, Makkah</span>
         </div>
+        <span className="text-slate-300 dark:text-slate-700">·</span>
+        <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">OpenStreetMap</span>
       </div>
     </div>
   );
