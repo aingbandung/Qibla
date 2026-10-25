@@ -26,12 +26,14 @@ import {
   CalendarDays,
   Volume2,
 } from 'lucide-react';
+import { getEventsForHijriDay } from '../services/islamicEvents';
 
 interface PrayerDashboardProps {
   userCoords: Coordinates;
   settings: PrayerSettings;
   onUpdateSettings: (newSettings: PrayerSettings) => void;
   onNavigateToCompass: () => void;
+  onNavigateToCalendar?: () => void;
   onOpenLocationModal: () => void;
   onRefreshGPS: () => void;
   isLoadingGPS: boolean;
@@ -42,6 +44,7 @@ export default function PrayerDashboard({
   settings,
   onUpdateSettings,
   onNavigateToCompass,
+  onNavigateToCalendar,
   onOpenLocationModal,
   onRefreshGPS,
   isLoadingGPS,
@@ -226,6 +229,54 @@ export default function PrayerDashboard({
           </button>
         </div>
       </div>
+
+      {/* Today's Islamic & Ahlul Bait Events Banner (if any) */}
+      {(() => {
+        const todayEvents = getEventsForHijriDay(hijri.monthIndex + 1, hijri.day);
+        if (todayEvents.length === 0) return null;
+        const mainEvent = todayEvents[0];
+        const isAhlulBait = mainEvent.category.startsWith('ahlulbait');
+        const isShahadat = mainEvent.category === 'ahlulbait_shahadat';
+
+        return (
+          <div
+            onClick={onNavigateToCalendar}
+            className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm ${
+              isShahadat
+                ? 'bg-rose-50/80 dark:bg-rose-950/40 border-rose-300 dark:border-rose-900 text-rose-950 dark:text-rose-200'
+                : 'bg-emerald-50/80 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-950 dark:text-emerald-200'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <div
+                className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-sm ${
+                  isShahadat
+                    ? 'bg-rose-600 text-white'
+                    : 'bg-emerald-600 text-white'
+                }`}
+              >
+                <CalendarDays className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-black/5 dark:bg-white/10 font-mono">
+                    {isAhlulBait ? 'AHLUL BAIT MILESTONE' : 'ISLAMIC OCCASION'}
+                  </span>
+                  <span className="text-xs font-arabic opacity-80">{mainEvent.arabicTitle}</span>
+                </div>
+                <div className="text-sm font-bold mt-0.5">{mainEvent.title}</div>
+                <p className="text-xs opacity-85 mt-0.5 line-clamp-1">
+                  {mainEvent.description}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-xs font-semibold self-start sm:self-auto shrink-0 text-emerald-700 dark:text-emerald-300">
+              <span>View details & A’mal in Calendar →</span>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Dominant Hero Focal Anchor: Next Prayer Countdown */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950 text-white p-6 sm:p-8 shadow-xl border border-slate-800">

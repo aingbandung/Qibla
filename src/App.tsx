@@ -11,6 +11,7 @@ import PrayerDashboard from './components/PrayerDashboard';
 import QiblaCompass from './components/QiblaCompass';
 import QiblaMap from './components/QiblaMap';
 import MonthlyTimetable from './components/MonthlyTimetable';
+import IslamicCalendar from './components/IslamicCalendar';
 import TasbihCounter from './components/TasbihCounter';
 import SettingsModal from './components/SettingsModal';
 import LocationModal from './components/LocationModal';
@@ -19,6 +20,7 @@ import {
   Clock,
   Map as MapIcon,
   Calendar,
+  CalendarDays,
   Sparkles,
   SlidersHorizontal,
   Moon,
@@ -27,7 +29,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 
-type NavTab = 'dashboard' | 'compass' | 'map' | 'schedule' | 'tasbih';
+type NavTab = 'dashboard' | 'compass' | 'map' | 'calendar' | 'schedule' | 'tasbih';
 
 const STORAGE_KEY_SETTINGS = 'qibla_sholat_settings_v1';
 const STORAGE_KEY_COORDS = 'qibla_sholat_coords_v1';
@@ -225,6 +227,7 @@ export default function App() {
     { id: 'dashboard', label: 'Prayer Times', icon: Clock },
     { id: 'compass', label: 'Qibla Compass', icon: Compass },
     { id: 'map', label: 'Direction Map', icon: MapIcon },
+    { id: 'calendar', label: 'Hijri Calendar', icon: CalendarDays },
     { id: 'schedule', label: 'Monthly Timetable', icon: Calendar },
     { id: 'tasbih', label: 'Tasbih', icon: Sparkles },
   ];
@@ -310,6 +313,7 @@ export default function App() {
             settings={settings}
             onUpdateSettings={handleUpdateSettings}
             onNavigateToCompass={() => setActiveTab('compass')}
+            onNavigateToCalendar={() => setActiveTab('calendar')}
             onOpenLocationModal={() => setIsLocationModalOpen(true)}
             onRefreshGPS={handleGetGPSLocation}
             isLoadingGPS={isLoadingGPS}
@@ -360,6 +364,10 @@ export default function App() {
           </div>
         )}
 
+        {activeTab === 'calendar' && (
+          <IslamicCalendar userCoords={coords} settings={settings} />
+        )}
+
         {activeTab === 'schedule' && (
           <MonthlyTimetable userCoords={coords} settings={settings} />
         )}
@@ -380,9 +388,9 @@ export default function App() {
         )}
       </main>
 
-      {/* Mobile Fixed Bottom Navigation Bar (Strictly $\ge 44px$ touch targets) */}
+      {/* Mobile Fixed Bottom Navigation Bar (Strictly >= 44px touch targets) */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 safe-bottom">
-        <div className="grid grid-cols-5 items-center h-16">
+        <div className="grid grid-cols-6 items-center h-16">
           {navLinks.map((tab) => {
             const isActive = activeTab === tab.id;
             const Icon = tab.icon;
@@ -390,15 +398,19 @@ export default function App() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as NavTab)}
-                className={`min-h-[48px] flex flex-col items-center justify-center transition-colors ${
+                className={`min-h-[48px] flex flex-col items-center justify-center transition-colors px-0.5 ${
                   isActive
                     ? 'text-emerald-600 dark:text-emerald-400 font-bold'
                     : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
                 }`}
               >
-                <Icon className={`w-5 h-5 ${isActive ? 'scale-110' : ''} transition-transform`} />
-                <span className="text-[10px] tracking-tight mt-1 truncate max-w-[64px]">
-                  {tab.id === 'dashboard' ? 'Prayer' : tab.label.split(' ')[0]}
+                <Icon className={`w-4 h-4 ${isActive ? 'scale-110' : ''} transition-transform`} />
+                <span className="text-[9px] tracking-tight mt-1 truncate max-w-[54px]">
+                  {tab.id === 'dashboard'
+                    ? 'Prayer'
+                    : tab.id === 'calendar'
+                    ? 'Hijri'
+                    : tab.label.split(' ')[0]}
                 </span>
               </button>
             );
