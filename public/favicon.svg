@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGrad" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#065f46" />
+      <stop offset="60%" stop-color="#022c22" />
+      <stop offset="100%" stop-color="#011c15" />
+    </radialGradient>
+
+    <!-- Gold Metallic Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="40%" stop-color="#d97706" />
+      <stop offset="70%" stop-color="#b45309" />
+      <stop offset="100%" stop-color="#fbbf24" />
+    </linearGradient>
+
+    <!-- Kaaba Top Gradient -->
+    <linearGradient id="kaabaRoof" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+
+    <!-- Needle Gradient -->
+    <linearGradient id="needleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+
+    <!-- Drop Shadow -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <!-- App Rounded Base Frame -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+
+  <!-- Outer Decorative Ring -->
+  <circle cx="256" cy="256" r="210" fill="none" stroke="url(#goldGrad)" stroke-width="4" stroke-opacity="0.4" />
+  <circle cx="256" cy="256" r="195" fill="none" stroke="url(#goldGrad)" stroke-width="8" stroke-linecap="round" />
+
+  <!-- Compass Cardinal Ticks -->
+  <line x1="256" y1="65" x2="256" y2="85" stroke="url(#goldGrad)" stroke-width="5" stroke-linecap="round" />
+  <line x1="256" y1="427" x2="256" y2="447" stroke="url(#goldGrad)" stroke-width="5" stroke-linecap="round" />
+  <line x1="65" y1="256" x2="85" y2="256" stroke="url(#goldGrad)" stroke-width="5" stroke-linecap="round" />
+  <line x1="427" y1="256" x2="447" y2="256" stroke="url(#goldGrad)" stroke-width="5" stroke-linecap="round" />
+
+  <!-- Qibla Direction Arrow / North Pointer (Pointing to Kaaba) -->
+  <polygon points="256,92 232,150 256,138 280,150" fill="url(#goldGrad)" filter="url(#shadow)" />
+  <polygon points="256,138 232,150 200,225 256,180" fill="url(#needleGrad)" />
+  <polygon points="256,138 280,150 312,225 256,180" fill="#065f46" />
+
+  <!-- Holy Kaaba in Center (Isometric 3D Cube) -->
+  <g filter="url(#shadow)" transform="translate(0, 15)">
+    <!-- Kaaba Roof (Gold) -->
+    <polygon points="256,190 340,230 256,270 172,230" fill="url(#kaabaRoof)" stroke="#78350f" stroke-width="2" />
+
+    <!-- Kaaba Left Face (Deep Obsidian Black) -->
+    <polygon points="172,230 256,270 256,365 172,325" fill="#18181b" stroke="#27272a" stroke-width="1.5" />
+
+    <!-- Kaaba Right Face (Dark Zinc) -->
+    <polygon points="256,270 340,230 340,325 256,365" fill="#09090b" stroke="#27272a" stroke-width="1.5" />
+
+    <!-- Gold Embroidered Kiswah Belt (Left Face) -->
+    <polygon points="172,252 256,292 256,304 172,264" fill="url(#goldGrad)" />
+    <!-- Kiswah Geometric Details -->
+    <line x1="172" y1="258" x2="256" y2="298" stroke="#78350f" stroke-width="1.5" stroke-dasharray="3,3" />
+
+    <!-- Gold Embroidered Kiswah Belt (Right Face) -->
+    <polygon points="256,292 340,252 340,264 256,304" fill="url(#goldGrad)" />
+    <line x1="256" y1="298" x2="340" y2="258" stroke="#78350f" stroke-width="1.5" stroke-dasharray="3,3" />
+
+    <!-- Holy Kaaba Door (Bab al-Kaaba) on Right Face -->
+    <polygon points="274,302 296,291 296,335 274,346" fill="url(#goldGrad)" stroke="#78350f" stroke-width="1.5" />
+
+    <!-- Lower Gold Border (Shadharwan) -->
+    <polygon points="172,320 256,360 256,365 172,325" fill="url(#goldGrad)" />
+    <polygon points="256,360 340,320 340,325 256,365" fill="url(#goldGrad)" />
+  </g>
+
+  <!-- Cardinal Letter "N" & Qibla Text Indicator -->
+  <text x="256" y="82" font-family="-apple-system, system-ui, sans-serif" font-size="22" font-weight="900" fill="url(#goldGrad)" text-anchor="middle">N</text>
+</svg>

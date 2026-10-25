@@ -69,6 +69,16 @@ jobs:
             fi
           fi
 
+          # Update Android launcher app icons with the new Qibla symbol
+          echo "Updating Android launcher icons with Qibla symbol..."
+          for dir in android/app/src/main/res/mipmap-*; do
+            if [ -d "$dir" ]; then
+              cp public/app-icon.jpg "$dir/ic_launcher.png" || true
+              cp public/app-icon.jpg "$dir/ic_launcher_round.png" || true
+              cp public/app-icon.jpg "$dir/ic_launcher_foreground.png" || true
+            fi
+          done
+
       - name: Ensure gradlew is executable
         run: |
           chmod +x android/gradlew

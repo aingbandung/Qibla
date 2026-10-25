@@ -207,9 +207,11 @@ export default function App() {
               }}
               className="flex items-center gap-2 group"
             >
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-white flex items-center justify-center font-bold text-sm shadow-sm group-hover:scale-105 transition-transform">
-                <Compass className="w-4 h-4" />
-              </div>
+              <img
+                src="/app-icon.jpg"
+                alt="Qibla App Icon"
+                className="w-9 h-9 rounded-xl object-cover shadow-sm ring-1 ring-emerald-500/30 group-hover:scale-105 transition-transform shrink-0"
+              />
               <span className="text-base sm:text-lg font-extrabold tracking-tight font-display text-slate-900 dark:text-white whitespace-nowrap">
                 Qibla and Sholat by FF
               </span>
