@@ -40,7 +40,7 @@ The workflow will automatically create a new **GitHub Release** and attach the c
 ---
 
 ## 🛠 Local APK Building (Optional)
-If you want to build locally on your development computer with Android Studio installed:
+If you want to build locally on your development computer (requires **Java 21** / JDK 21 and Android Studio):
 ```bash
 # 1. Install dependencies
 npm install
@@ -55,4 +55,4 @@ npx cap sync android
 # 4. Open in Android Studio
 npx cap open android
 ```
-In Android Studio: Go to **Build > Build Bundle(s) / APK(s) > Build APK(s)**.
+In Android Studio: Ensure Gradle JDK is set to **Java 21**, then go to **Build > Build Bundle(s) / APK(s) > Build APK(s)**.
