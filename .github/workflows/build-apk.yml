@@ -69,15 +69,21 @@ jobs:
             fi
           fi
 
-          # Update Android launcher app icons with the new Qibla symbol
+          # Update Android launcher app icons with the new Qibla symbol (density folders only)
           echo "Updating Android launcher icons with Qibla symbol..."
-          for dir in android/app/src/main/res/mipmap-*; do
-            if [ -d "$dir" ]; then
-              cp public/app-icon.jpg "$dir/ic_launcher.png" || true
-              cp public/app-icon.jpg "$dir/ic_launcher_round.png" || true
-              cp public/app-icon.jpg "$dir/ic_launcher_foreground.png" || true
+          for density in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
+            TARGET_DIR="android/app/src/main/res/mipmap-${density}"
+            if [ -d "$TARGET_DIR" ]; then
+              cp public/app-icon.jpg "$TARGET_DIR/ic_launcher.png"
+              cp public/app-icon.jpg "$TARGET_DIR/ic_launcher_round.png"
+              cp public/app-icon.jpg "$TARGET_DIR/ic_launcher_foreground.png"
             fi
           done
+
+          # Prevent Duplicate Resources error: remove any PNGs from mipmap-anydpi-v26 where XMLs reside
+          rm -f android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.png
+          rm -f android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.png
+          rm -f android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_foreground.png
 
       - name: Ensure gradlew is executable
         run: |
