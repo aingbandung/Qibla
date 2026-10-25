@@ -1,0 +1,6 @@
+{
+  "name": "Qibla and Sholat by FF",
+  "description": "Minimalist Qibla compass and accurate prayer times worldwide with GPS, adhan alerts, customizable calculation methods, and interactive map.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
